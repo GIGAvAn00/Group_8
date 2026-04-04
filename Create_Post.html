@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Event Post</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="main.css"> </head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                
+                <div class="position-relative bg-dark" style="height: 300px;">
+                    <img id="postPreviewImg" src="https://images.stockcake.com/public/2/4/1/241780b9-650a-442c-8723-d9f425efd5a2_large/joyful-birthday-party-stockcake.jpg" 
+                         class="w-100 h-100 object-fit-cover opacity-75">
+                    <div class="position-absolute bottom-0 start-0 p-4 text-white">
+                        <label for="imgUpload" class="btn btn-sm btn-light rounded-pill">
+                            <i class="fas fa-camera me-2"></i> Change Cover Photo
+                        </label>
+                        <input type="file" id="imgUpload" hidden accept="image/*" onchange="previewImage(event)">
+                    </div>
+                </div>
+
+                <div class="card-body p-5">
+                    <h3 class="fw-bold mb-4">Event Details</h3>
+                    
+                    <form id="createPostForm">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label small fw-bold">Event Title (e.g. Birthday Host Name)</label>
+                                <input type="text" class="form-control rounded-pill p-3" id="eventTitle" placeholder="e.g. Ivan's 21st Birthday Bash" required>
+                            </div>
+
+                            <div class="col-md-8">
+                                <label class="form-label small fw-bold">Celebration Date (Month & Day)</label>
+                                <input type="date" class="form-control rounded-pill p-3" id="eventDate" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Gender</label>
+                                <select class="form-select rounded-pill p-3" id="eventGender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Mixed">Mixed/Others</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Guest Limit</label>
+                                <input type="number" 
+                                    class="form-control rounded-pill p-3" 
+                                    id="guestLimit" 
+                                    placeholder="Max People" 
+                                    min="1" 
+                                    oninput="this.value = Math.abs(Math.floor(this.value)) || ''">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Venue / Place</label>
+                                <input type="text" class="form-control rounded-pill p-3" id="eventVenue" placeholder="Location Name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Time</label>
+                                <input type="time" class="form-control rounded-pill p-3" id="eventTime" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label small fw-bold">Theme / What to Wear</label>
+                                <input type="text" class="form-control rounded-pill p-3" id="eventTheme" placeholder="e.g. White & Gold Semi-Formal">
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label small fw-bold">Description</label>
+                                <textarea class="form-control rounded-4 p-3" id="eventDesc" rows="4" placeholder="Tell your guests about the event..."></textarea>
+                            </div>
+                            
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label small fw-bold text-pink">Privacy Setting</label>
+                                <div class="input-group-pill">
+                                    <div class="icon-block">
+                                        <i class="fas fa-lock"></i>
+                                    </div>
+                                    <select class="form-select border-0 p-3" id="eventPrivacy" style="outline: none; box-shadow: none;">
+                                        <option value="Public" selected>Public Event (Visible to everyone)</option>
+                                        <option value="Private">Private Event (Invite only)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-4 d-flex gap-2">
+                                <a href="Main_Menu.html" class="btn btn-light rounded-pill flex-fill py-3">Cancel</a>
+                                <button type="submit" class="btn btn-pink rounded-pill flex-fill py-3 fw-bold">CREATE POST</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="User_Script.js">
+    
+</script>
+
+</body>
+</html>

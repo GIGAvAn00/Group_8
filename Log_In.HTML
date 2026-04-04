@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celeb Search</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+<!--Carousel-Left-->
+<div class="container-fluid p-0 vh-100">
+    <div class="row g-0 h-100">
+
+        <!--each contains a pic-->
+        <div class="col-lg-5 col-md-5 d-none d-md-block p-0">
+            <div id="loginCarousel" class="carousel slide h-100" data-bs-ride="carousel">
+                <div class="carousel-inner h-100">
+                    <div class="carousel-item active h-100" data-bs-interval="3000"> 
+                        <img src="https://images.stockcake.com/public/2/4/1/241780b9-650a-442c-8723-d9f425efd5a2_large/joyful-birthday-party-stockcake.jpg" class="d-block w-100 h-100 carousel-img" alt="Birthday 1" style="object-fit: cover;">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h3>Plan Your Party</h3>
+                        </div>
+                    </div>
+
+                    <div class="carousel-item h-100" data-bs-interval="3000">
+                        <img src="https://marketplace.canva.com/P_Dag/MAEYYFP_Dag/1/tl/canva-photo-of-a-group-of-kids-celebrating-a-birthday-party-MAEYYFP_Dag.jpg" class="d-block w-100 h-100 carousel-img" alt="Birthday 2" style="object-fit: cover;">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h3>Invite Your Friends</h3>
+                        </div>
+                    </div>
+
+                    <div class="carousel-item h-100" data-bs-interval="3000">
+                        <img src="https://img.freepik.com/free-photo/children-s-funny-birthday-party-decorated-room-happy-kids-with-cake-ballons_1157-46682.jpg" class="d-block w-100 h-100 carousel-img" alt="Birthday 2" style="object-fit: cover;">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h3>Invite Your Friends</h3>
+                        </div>
+                    </div>
+
+                    <div class="carousel-item h-100" data-bs-interval="3000">
+                        <img src="https://t4.ftcdn.net/jpg/02/43/09/11/360_F_243091137_EpRIVWrSnpAonZ1PsojvdBMDIajooL7s.jpg" class="d-block w-100 h-100 carousel-img" alt="Birthday 2" style="object-fit: cover;">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h3>Invite Your Friends</h3>
+                        </div>
+                    </div>
+
+                    <div class="carousel-item h-100" data-bs-interval="3000">
+                        <img src="https://media.istockphoto.com/id/2259259026/photo/little-boy-celebrating-birthday-at-home-with-friends.webp?b=1&s=612x612&w=0&k=20&c=-cLDrOEzi4L_z49kC2n8t2tXxtIGn0FZEGaaQxHd4Rc=" class="d-block w-100 h-100 carousel-img" alt="Birthday 2" style="object-fit: cover;">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h3>Invite Your Friends</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Controls the slides-->
+                <button class="carousel-control-prev" type="button" data-bs-target="#loginCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#loginCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+<!--Log_In_Form-Right-->
+        <div class="col-lg-7 col-md-7 d-flex align-items-center justify-content-center right-panel">
+            <div class="login-box p-5 shadow-lg">
+                <h2 class="welcome-text text-center mb-4">WELCOME</h2>
+                
+                <div class="form-container">
+                    <div class="input-group-pill mb-3">
+                        <i class="fas fa-user icon-block p-3"></i>
+                        <input type="text" id="name" class="form-control border-0" placeholder="Username">
+                    </div>
+
+                    <div class="input-group-pill mb-3">
+                        <i class="fas fa-envelope icon-block p-3"></i>
+                        <input type="email" id="email" class="form-control border-0" placeholder="Email Address">
+                    </div>
+
+                    <div class="input-group-pill mb-4">
+                        <i class="fas fa-lock icon-block p-3"></i>
+                        <input type="password" id="password" class="form-control border-0" placeholder="Password">
+                    </div>
+
+                    <button class="enter-btn-pill w-100" onclick="login()">ENTER SYSTEM</button>
+                    
+                    <p class="mt-4 small-text text-center text-white">
+                        Not Registered yet? <a href="#" class="text-white fw-bold" data-bs-toggle="modal" data-bs-target="#registerModal">Click here</a>
+                    </p>
+                    
+                </div>
+            </div>
+        </div>
+
+
+<div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow-lg">
+      <div class="modal-body p-5">
+        <h2 class="fw-bold text-center mb-4" style="color: #fbc6d3;">Create Account</h2>
+        
+        <div id="regStep1">
+            <div class="mb-3"><input type="text" id="regName" class="form-control rounded-pill p-3 border-0 bg-light" placeholder="Full Name"></div>
+            <div class="mb-3"><input type="number" id="regAge" class="form-control rounded-pill p-3 border-0 bg-light" placeholder="Age"></div>
+            <div class="mb-3"><input type="date" id="regBirth" class="form-control rounded-pill p-3 border-0 bg-light"></div>
+            <div class="mb-3">
+                <select id="regGender" class="form-control rounded-pill p-3 border-0 bg-light">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <button class="btn btn-pink w-100 rounded-pill py-3 fw-bold" onclick="showRegStep(2)">NEXT</button>
+        </div>
+
+        <div id="regStep2" style="display: none;">
+            <div class="mb-3"><input type="email" id="regEmail" class="form-control rounded-pill p-3 border-0 bg-light" placeholder="Email Address"></div>
+            <div class="mb-4"><input type="password" id="regPass" class="form-control rounded-pill p-3 border-0 bg-light" placeholder="Create Password"></div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-light rounded-pill flex-fill py-2" onclick="showRegStep(1)">Back</button>
+                <button class="btn btn-pink rounded-pill flex-fill py-2 fw-bold" onclick="registerAccount()">REGISTER</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div> </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="User_Script.js"></script>
+
+</body>
+</html>

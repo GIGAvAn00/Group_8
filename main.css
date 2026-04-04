@@ -1,0 +1,418 @@
+/* Layout Fixes */
+.vh-100 {
+    height: 100vh;
+}
+
+/* Carousel Image Handling */
+.carousel-img {
+    object-fit: cover; /* This prevents the "too wide" or stretched look */
+    filter: brightness(0.8);
+}
+
+.carousel-caption {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    padding: 10px;
+    bottom: 20%;
+}
+
+/* Right Panel (Pink Theme) */
+.right-panel {
+    background-color: #fbc6d3; /* Your signature soft pink */
+}
+
+.login-box {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.welcome-text {
+    font-weight: 800;
+    color: white;
+    letter-spacing: 2px;
+}
+
+/* Pill Input Styling */
+.input-group-pill {
+    background: white;
+    border-radius: 50px;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.icon-block {
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fbc6d3;
+    background: #f8f9fa;
+}
+
+.input-group-pill input {
+    border: none;
+    padding: 15px;
+    flex: 1;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+/* Button Styling */
+.enter-btn-pill {
+    background-color: white;
+    color: #fbc6d3;
+    border: none;
+    padding: 15px;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.enter-btn-pill:hover {
+    background-color: #333;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.small-text {
+    color: white;
+}
+
+
+/*MainMenu css */
+.text-pink { color: #fbc6d3 !important; }
+.btn-pink { background-color: #fbc6d3; color: white; border: none; }
+.btn-pink:hover { background-color: #f9a8bc; color: white; }
+
+.bg-soft-pink { background-color: #fff0f3; color: #d63384; }
+
+.rounded-4 { border-radius: 1.5rem !important; }
+
+.nav-link:hover {
+    color: #fbc6d3 !important;
+}
+
+/* Custom Pink Styling */
+.text-pink { color: #fbc6d3 !important; }
+.btn-pink { background-color: #fbc6d3; color: white; border: none; }
+.btn-pink:hover { background-color: #f9a8bc; color: white; }
+
+.bg-soft-pink { background-color: #fff0f3; color: #d63384; }
+
+/* Clean Layout Shapes */
+.rounded-4 { border-radius: 1.2rem !important; }
+
+.profile-sidebar:hover {
+    background-color: #fff5f7 !important;
+    transition: 0.3s;
+}
+
+/* Fix sidebar alignment */
+.list-group-item {
+    background-color: white;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.col-md-3 {
+    position: sticky;
+    top: 80px; /* Adjust based on your navbar height */
+    height: fit-content;
+}
+
+.profile-sidebar:hover {
+    box-shadow: 0 10px 20px rgba(251, 198, 211, 0.3) !important;
+    transform: translateY(-2px);
+}
+
+/* Custom Scrollbar for Notifications */
+#notificationList::-webkit-scrollbar {
+    width: 5px;
+}
+
+#notificationList::-webkit-scrollbar-track {
+    background: #f8f9fa;
+}
+
+#notificationList::-webkit-scrollbar-thumb {
+    background: #fbc6d3;
+    border-radius: 10px;
+}
+
+#notificationList::-webkit-scrollbar-thumb:hover {
+    background: #f9a8bc;
+}
+
+/* Notification Item Hover Effect */
+.notif-item {
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.notif-item:hover {
+    background-color: #fff5f7;
+}
+
+/* ==========================================
+ * V. CALENDAR STYLING (CLEANED UP)
+ * ========================================== */
+#calendarDaysGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* Forces exactly 7 equal columns */
+    gap: 8px; /* Slightly more breathing room */
+    margin-top: 10px;
+    text-align: center;
+}
+
+.calendar-day, .calendar-day-empty {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Makes days perfectly square/circular */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.calendar-day {
+    cursor: pointer;
+    position: relative;
+    border-radius: 50%; /* Clean circular look */
+}
+
+.calendar-day:hover {
+    background-color: #fff5f7;
+    color: #ff8fab;
+}
+
+/* The Pink Dot for events */
+.event-dot::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background-color: #ff8fab;
+    border-radius: 50%;
+}
+
+/* When a date is clicked/active */
+.selected-date {
+    background-color: #ff8fab !important;
+    color: white !important;
+}
+
+.selected-date.event-dot::after {
+    background-color: white; /* Dot turns white on pink background */
+}
+
+.calendar-day-empty {
+    cursor: default;
+}
+
+/* Calendar Navigation Buttons */
+.btn-outline-pink {
+    color: #fbc6d3;
+    border: 1px solid #fbc6d3;
+    background: white;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.btn-outline-pink:hover {
+    background-color: #fbc6d3;
+    color: white;
+    border-color: #fbc6d3;
+}
+
+/* Selected Date Highlight */
+.selected-date {
+    background-color: #fbc6d3 !important;
+    color: white !important;
+}
+
+/* Today or Selected Highlight */
+.selected-date {
+    background-color: #fbc6d3 !important;
+    color: white !important;
+}
+
+/* The Dot for events */
+.event-dot::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    background-color: #fbc6d3;
+    border-radius: 50%;
+}
+
+/* Make the dot white when the date is selected/highlighted */
+.selected-date.event-dot::after {
+    background-color: white;
+}
+
+.selected-date.event-dot::after {
+    background-color: white;
+}
+
+.form-select {
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.form-select:focus {
+    border: none;
+    box-shadow: none;
+}
+
+/* Update these specific parts in your CSS */
+.activity-card {
+    background-color: white;
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 1.2rem !important;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.activity-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(251, 198, 211, 0.2) !important;
+}
+
+.card-event-img {
+    object-fit: cover;
+    display: block;
+}
+
+.details-inline span {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.btn-pink {
+    background-color: #fbc6d3;
+    color: white;
+    border: none;
+}
+
+/* Card Image (Now pill-shaped in the body, not top-banner) */
+.card-event-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.card-event-body {
+    padding: 1.5rem;
+}
+
+/* Structuring the Details Block */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.details-item {
+    display: flex;
+    align-items: center;
+}
+
+.details-item i {
+    width: 20px;
+    color: #fbc6d3;
+    margin-right: 8px;
+    font-size: 0.8rem;
+}
+
+/* GUEST COUNT / LIMIT INDICATOR */
+.limit-badge {
+    background-color: #fff0f3;
+    color: #d63384;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(214, 51, 132, 0.1);
+}
+
+.limit-badge i {
+    font-size: 0.7rem;
+}
+
+
+/* Fix the Activity Card sizing */
+.activity-card {
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+
+.card-event-img {
+    width: 100%;
+    height: 180px; /* Adjust height to fit your preference */
+    object-fit: cover;
+}
+
+
+/* Fix Calendar Grid */
+#calendarDaysGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-top: 10px;
+}
+
+/* Card Styling */
+.activity-card {
+    border: none;
+    transition: transform 0.2s;
+}
+.activity-card:hover {
+    transform: translateY(-3px);
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 0.8rem;
+    margin: 10px 0;
+}
+
+.text-pink { color: #ff8fab !important; }
+.btn-pink { background-color: #ff8fab; color: white; border: none; }
+.btn-pink:hover { background-color: #fb6f92; color: white; }
+
+/* Makes the links slightly change color on hover */
+a.text-dark:hover {
+    color: #ff8fab !important;
+    transition: 0.3s;
+}
+
+/*admin css */
+

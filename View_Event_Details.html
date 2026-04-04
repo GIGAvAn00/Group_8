@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guest List Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+    <style>
+        :root { --primary-pink: #ff85a2; --bg-light: #f8f9fa; }
+        body { background-color: var(--bg-light); color: #444; }
+        .bg-pink-gradient { background: linear-gradient(45deg, #ff85a2, #f06292); }
+        .rounded-4 { border-radius: 1.2rem !important; }
+        .headcount-box { background: white; color: var(--primary-pink); min-width: 100px; text-align: center; }
+        .guest-tag { background: #eee; border-radius: 20px; padding: 2px 10px; font-size: 0.75rem; margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+        <div class="bg-pink-gradient p-4 text-white d-flex justify-content-between align-items-center">
+            <div>
+                <h2 id="eventTitle" class="fw-bold mb-0">Event Title</h2>
+                <p class="mb-0 opacity-75 small">Creator: Me (Authorized Host)</p>
+            </div>
+            <div class="headcount-box rounded-4 p-2 shadow-sm">
+                <small class="d-block fw-bold text-muted" style="font-size: 0.6rem;">HEADCOUNT</small>
+                <span id="totalGuests" class="h4 fw-bold mb-0">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between">
+            <h5 class="fw-bold mb-0">Confirmed Participants</h5>
+            <input type="text" class="form-control form-control-sm w-25 border-0 bg-light" placeholder="Search guests...">
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="bg-light small text-muted text-uppercase">
+                        <tr>
+                            <th class="ps-4">Participant</th>
+                            <th>Gender</th>
+                            <th class="text-center">Age</th>
+                            <th>Extra Guests</th>
+                            <th class="pe-4 text-end">RSVP Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="participantList">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  window.onload = function() {
+    const eventId = localStorage.getItem("viewingDetailsId");
+    const myPosts = JSON.parse(localStorage.getItem("userPosts")) || [];
+    const event = myPosts.find(p => p.id === eventId);
+
+    // 1. Get references to elements
+    const titleElement = document.getElementById('eventTitle');
+    const headcountElement = document.getElementById('totalGuests');
+
+    // 2. ONLY set properties if they are NOT null
+    if (event) {
+        if (titleElement) {
+            titleElement.innerText = event.title;
+        }
+        
+        if (headcountElement) {
+            // Your logic to calculate and set headcount
+            headcountElement.innerText = "5"; 
+        }
+    }
+};
+
+</script>
+</body>
+</html>

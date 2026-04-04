@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - Celeb Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body class="bg-light">
+
+<div class="d-flex">
+    <div class="bg-dark text-white p-4 vh-100" style="width: 250px;">
+        <h4 class="fw-bold text-pink">ADMIN PANEL</h4>
+        <hr>
+        <ul class="nav flex-column">
+            <li class="nav-item mb-2"><a href="#" class="nav-link text-white active"><i class="fas fa-tasks me-2"></i> Requests</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link text-white"><i class="fas fa-bullhorn me-2"></i> Overseer Posts</a></li>
+            <li class="nav-item mt-5"><a href="Log_in.html" class="nav-link text-danger"><i class="fas fa-power-off me-2"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="flex-grow-1 p-5">
+        <h2 class="fw-bold mb-4">Pending Requests</h2>
+        
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="table-responsive p-3">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Host</th>
+                            <th>Event Title</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Juan Dela Cruz</strong><br><small>juan@mail.com</small></td>
+                            <td>Grand Birthday Bash</td>
+                            <td><span class="badge bg-warning text-dark">Pending</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-success rounded-pill px-3">Accept</button>
+                                <button class="btn btn-sm btn-danger rounded-pill px-3">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="profile-sidebar p-3 mb-3 bg-white shadow-sm rounded-4 text-center">
+    <div class="profile-trigger" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#userProfileModal">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="rounded-circle mb-2" width="80" height="80" alt="Profile">
+        <h6 class="fw-bold mb-0" id="sideName">User Name</h6>
+        <p class="text-muted small" id="sideEmail">user@email.com</p>
+    </div>
+    
+    <hr>
+    
+    <button class="btn btn-outline-danger w-100 rounded-pill border-0" data-bs-toggle="modal" data-bs-target="#logoutModal">
+        <i class="fas fa-sign-out-alt me-2"></i> Log Out
+    </button>
+</div>
+
+<div class="modal fade" id="userProfileModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 text-center">
+      <div class="modal-body p-4">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="rounded-circle mb-3 shadow-sm" width="100">
+        <h4 class="fw-bold" id="modalName">Name</h4>
+        <p class="badge bg-soft-pink text-pink px-3" id="modalID">ID: #0001</p>
+        
+        <ul class="list-group list-group-flush text-start small">
+            <li class="list-group-item"><b>Email:</b> <span id="modalEmail"></span></li>
+            <li class="list-group-item"><b>Age:</b> <span id="modalAge"></span></li>
+            <li class="list-group-item"><b>Gender:</b> <span id="modalGender"></span></li>
+            <li class="list-group-item"><b>Birthday:</b> <span id="modalBirth"></span></li>
+        </ul>
+        <button class="btn btn-pink w-100 mt-4 rounded-pill" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
