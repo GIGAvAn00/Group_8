@@ -49,29 +49,105 @@ function registerAccount() {
 
 
 
-window.onload = function() {
-    // 1. Load Profile Data (For Sidebar/Modals)
-    const profile = JSON.parse(localStorage.getItem("userProfile"));
-    if (profile) {
-        if(document.getElementById('sideName')) document.getElementById('sideName').innerText = profile.name;
-        if(document.getElementById('sideEmail')) document.getElementById('sideEmail').innerText = profile.email;
-        if(document.getElementById('modalName')) document.getElementById('modalName').innerText = profile.name;
-        if(document.getElementById('modalEmail')) document.getElementById('modalEmail').innerText = profile.email;
-        if(document.getElementById('modalAge')) document.getElementById('modalAge').innerText = profile.age;
-        if(document.getElementById('modalGender')) document.getElementById('modalGender').innerText = profile.gender;
-        if(document.getElementById('modalBirth')) document.getElementById('modalBirth').innerText = profile.birth;
-        if(document.getElementById('modalID')) document.getElementById('modalID').innerText = "ID: #" + profile.id;
+// --- 1. Registration: Store in an array of users ---
+function registerAccount() {
+    const newUser = {
+        name: document.getElementById('regName').value,
+        age: document.getElementById('regAge').value,
+        birth: document.getElementById('regBirth').value,
+        gender: document.getElementById('regGender').value,
+        email: document.getElementById('regEmail').value,
+        pass: document.getElementById('regPass').value,
+        id: Math.floor(1000 + Math.random() * 9000) 
+    };
+
+    if (newUser.name && newUser.email && newUser.pass) {
+        // Get existing users or start new array
+        let users = JSON.parse(localStorage.getItem("allUsers")) || [];
+        
+        // Check if email already exists
+        if (users.some(u => u.email === newUser.email)) {
+            alert("This email is already registered.");
+            return;
+        }
+
+        users.push(newUser);
+        localStorage.setItem("allUsers", JSON.stringify(users));
+        alert("Account Created Successfully! Please Log In.");
+        window.location.reload();
+    } else {
+        alert("Please fill in all fields!");
+    }
+}
+
+// --- 2. Login: Track who is currently active ---
+function login() {
+    const emailInput = document.getElementById('email').value;
+    const passInput = document.getElementById('password').value;
+    const ADMIN_EMAIL = "admin@celeb.com";
+    const ADMIN_PASS = "admin123";
+
+    if (emailInput === ADMIN_EMAIL && passInput === ADMIN_PASS) {
+        localStorage.setItem("currentUserEmail", "admin");
+        window.location.href = "Admin_Interface.html";
+        return;
     }
 
-    // 2. Initialize Page-Specific Features
-    checkInitialInvites();  
-    loadFeed();             
+    let users = JSON.parse(localStorage.getItem("allUsers")) || [];
+    const user = users.find(u => u.email === emailInput && u.pass === passInput);
+
+    if (user) {
+        // Store only the identifier for the session
+        localStorage.setItem("currentUserEmail", user.email);
+        window.location.href = "Main_Menu.html";
+    } else {
+        alert("Invalid email or password.");
+    }
+}
+
+// --- 3. Page Load: Fetch data for the active user ---
+window.onload = function() {
+    const currentEmail = localStorage.getItem("currentUserEmail");
+    let users = JSON.parse(localStorage.getItem("allUsers")) || [];
+    
+    // Find the profile of the person logged in
+    const profile = users.find(u => u.email === currentEmail);
+    
+    if (profile) {
+        // Map data to UI
+        const fields = {
+            'sidePanelName': profile.name,
+            'sidePanelID': "#ID-" + profile.id,
+            'sidePanelEmail': profile.email,
+            'sidePanelAge': profile.age,
+            'sidePanelGender': profile.gender,
+            'sidePanelBirth': profile.birth,
+            'sideName': profile.name,
+            'sideEmail': profile.email
+        };
+
+        for (let id in fields) {
+            if (document.getElementById(id)) {
+                document.getElementById(id).innerText = fields[id];
+            }
+        }
+    } else if (window.location.pathname.includes("Main_Menu.html")) {
+        // Security: Redirect to login if no profile found and on a protected page
+        window.location.href = "Log_In.html";
+    }
+
+    // Initialize other features
+    loadFeed();              
     renderNotifications();  
     initCalendar();         
-    initViewEvent();        
-    loadParticipantData();
-    loadMyHostedEvents();
 };
+
+// --- 4. Logout: Clear the session ---
+function executeLogout() {
+    localStorage.removeItem("currentUserEmail"); // Remove specific session
+    // Optional: localStorage.clear(); // Only use if you want to wipe EVERYTHING
+    window.location.href = "Log_In.html";
+}
 
 function checkInitialInvites() {
     let notifications = JSON.parse(localStorage.getItem("userNotifications")) || [];
@@ -284,26 +360,29 @@ function initCalendar() {
     const allEvents = [...myPosts, ...systemInvites];
 
     let html = '';
+
+    // 1. Fill empty slots for the previous month
     for (let x = 0; x < firstDayIndex; x++) {
-        html += `<div class="col" style="height:40px;"></div>`;
+        html += `<div></div>`; // Empty div, no 'col' class needed
     }
 
+    // 2. Fill the actual days
     for (let i = 1; i <= daysInMonth; i++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
         const hasEvent = allEvents.some(e => e.date === dateStr);
-        const dotClass = hasEvent ? 'position-relative border-pink border' : '';
+        
+        // Use your existing 'event-dot' class from CSS or dot logic
+        const dotClass = hasEvent ? 'event-dot border-pink border' : '';
 
         html += `
-            <div class="col">
-                <div class="calendar-day p-1 rounded-circle d-flex align-items-center justify-content-center ${dotClass}" 
-                     style="height:40px; cursor:pointer; font-size: 0.9rem;"
-                     onclick="viewDate('${dateStr}')">
-                     ${i}
-                     ${hasEvent ? '<span class="position-absolute bottom-0 start-50 translate-middle-x bg-pink rounded-circle" style="width:4px; height:4px; margin-bottom: 2px;"></span>' : ''}
-                </div>
+            <div class="calendar-day ${dotClass}" 
+                 onclick="viewDate('${dateStr}')">
+                 ${i}
+                 ${hasEvent ? '<span class="position-absolute bottom-0 start-50 translate-middle-x bg-pink rounded-circle" style="width:4px; height:4px; margin-bottom: 5px;"></span>' : ''}
             </div>`;
         
-        if ((i + firstDayIndex) % 7 === 0) html += '<div class="w-100"></div>';
+        // REMOVED: The (i + firstDayIndex) % 7 logic. 
+        // CSS Grid handles the wrapping automatically!
     }
     grid.innerHTML = html;
 }
@@ -339,10 +418,6 @@ function changeMonth(step) {
 }
 
 
-function executeLogout() {
-    localStorage.removeItem("userRole");
-    window.location.href = "Log_In.html";
-}
 
 const rsvpModal = document.getElementById('acceptModal') ? new bootstrap.Modal(document.getElementById('acceptModal')) : null;
 
