@@ -2,82 +2,157 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Guest List Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Hosted Events</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary-pink: #ff85a2; --bg-light: #f8f9fa; }
-        body { background-color: var(--bg-light); color: #444; }
-        .bg-pink-gradient { background: linear-gradient(45deg, #ff85a2, #f06292); }
-        .rounded-4 { border-radius: 1.2rem !important; }
-        .headcount-box { background: white; color: var(--primary-pink); min-width: 100px; text-align: center; }
-        .guest-tag { background: #eee; border-radius: 20px; padding: 2px 10px; font-size: 0.75rem; margin-right: 5px; }
+        :root { --pink: #ff6b81; --soft-pink: #fff0f2; --gradient: linear-gradient(135deg, #ff6b81 0%, #ff8e9e 100%); }
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        
+        /* Sidebar Refinement */
+        .event-sidebar {
+            width: 350px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #eee;
+            position: fixed;
+            left: 0; top: 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        .sidebar-header { 
+            padding: 30px 20px; 
+            background: var(--gradient); 
+            color: white;
+            position: sticky; top: 0;
+        }
+        .event-nav-item {
+            padding: 20px;
+            margin: 10px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+            background: #fff;
+        }
+        .event-nav-item:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 129, 0.1);
+            background: var(--soft-pink);
+        }
+        .event-nav-item.active {
+            background: var(--soft-pink);
+            border: 1px solid var(--pink);
+        }
+        .event-icon {
+            width: 40px; height: 40px;
+            background: var(--soft-pink);
+            color: var(--pink);
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 10px;
+        }
+
+        /* Main Content & Header */
+        .main-view { margin-left: 350px; height: 100vh; overflow-y: auto; padding: 40px; }
+        .info-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--pink);
+        }
+        .detail-badge {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 12px;
+            display: flex; align-items: center;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .detail-badge i { color: var(--pink); width: 25px; }
+
+        /* Folders & Tables */
+        .guest-folder {
+            background: #fafafa;
+            border: 1px dashed #ff6b81;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 10px;
+            display: none;
+        }
+        .btn-back {
+            color: white; text-decoration: none; font-size: 0.9rem;
+            display: inline-flex; align-items: center;
+            margin-bottom: 15px; opacity: 0.9;
+        }
+        .btn-back:hover { opacity: 1; color: white; }
     </style>
 </head>
 <body>
 
-<div class="container py-5">
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
-        <div class="bg-pink-gradient p-4 text-white d-flex justify-content-between align-items-center">
-            <div>
-                <h2 id="eventTitle" class="fw-bold mb-0">Event Title</h2>
-                <p class="mb-0 opacity-75 small">Creator: Me (Authorized Host)</p>
+    <div class="event-sidebar shadow">
+        <div class="sidebar-header">
+            <a href="Main_Menu.html" class="btn-back"><i class="fas fa-arrow-left me-2"></i> Back to Dashboard</a>
+            <h4 class="fw-bold mb-0">My Created Events</h4>
+        </div>
+        <div id="sidebarEventList" class="py-3">
             </div>
-            <div class="headcount-box rounded-4 p-2 shadow-sm">
-                <small class="d-block fw-bold text-muted" style="font-size: 0.6rem;">HEADCOUNT</small>
-                <span id="totalGuests" class="h4 fw-bold mb-0">0</span>
+    </div>
+
+    <div class="main-view">
+        <div id="noSelectionMsg" class="text-center py-5">
+            <div class="mb-4"><i class="fas fa-calendar-check fa-4x text-muted opacity-25"></i></div>
+            <h4 class="text-muted fw-light">Select an event from the sidebar to view full details</h4>
+        </div>
+
+        <div id="detailView" style="display: none;">
+            <div class="info-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <h1 id="displayTitle" class="fw-bold text-dark mb-3">---</h1>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="detail-badge"><i class="fas fa-map-marker-alt"></i> <span id="displayVenue">---</span></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="detail-badge"><i class="fas fa-clock"></i> <span id="displayTime">---</span></div>
+                            </div>
+                            <div class="col-12">
+                                <div class="detail-badge"><i class="fas fa-location-arrow"></i> <span id="displayAddress">---</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center ms-4 bg-soft-pink p-3 rounded-4" style="min-width: 140px;">
+                        <small class="text-pink fw-bold d-block mb-1">TOTAL HEADCOUNT</small>
+                        <h2 id="headerTotalHeadcount" class="fw-bold text-pink mb-0">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4 border-0 text-muted small">PARTICIPANT</th>
+                                    <th class="border-0 text-muted small">GENDER/AGE</th>
+                                    <th class="border-0 text-muted small">ARRIVAL</th>
+                                    <th class="border-0 text-muted small">PLUS GUESTS</th>
+                                    <th class="pe-4 border-0 text-muted small text-end">ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody id="participantTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between">
-            <h5 class="fw-bold mb-0">Confirmed Participants</h5>
-            <input type="text" class="form-control form-control-sm w-25 border-0 bg-light" placeholder="Search guests...">
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table align-middle mb-0">
-                    <thead class="bg-light small text-muted text-uppercase">
-                        <tr>
-                            <th class="ps-4">Participant</th>
-                            <th>Gender</th>
-                            <th class="text-center">Age</th>
-                            <th>Extra Guests</th>
-                            <th class="pe-4 text-end">RSVP Date</th>
-                        </tr>
-                    </thead>
-                    <tbody id="participantList">
-                        </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-  window.onload = function() {
-    const eventId = localStorage.getItem("viewingDetailsId");
-    const myPosts = JSON.parse(localStorage.getItem("userPosts")) || [];
-    const event = myPosts.find(p => p.id === eventId);
-
-    // 1. Get references to elements
-    const titleElement = document.getElementById('eventTitle');
-    const headcountElement = document.getElementById('totalGuests');
-
-    // 2. ONLY set properties if they are NOT null
-    if (event) {
-        if (titleElement) {
-            titleElement.innerText = event.title;
-        }
-        
-        if (headcountElement) {
-            // Your logic to calculate and set headcount
-            headcountElement.innerText = "5"; 
-        }
-    }
-};
-
-</script>
+    <script src="User_Script.js"></script>
 </body>
 </html>

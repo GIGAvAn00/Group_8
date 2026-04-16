@@ -1,19 +1,73 @@
 function login() {
-    const user = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const pass = document.getElementById('password').value;
+    const emailInput = document.getElementById('email').value;
+    const passInput = document.getElementById('password').value;
+    
     const ADMIN_EMAIL = "admin@celeb.com";
     const ADMIN_PASS = "admin123";
 
-    if (user && email && pass) {
-        if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
-            window.location.href = "Admin_Interface.html";
-        } else {
-            window.location.href = "Main_Menu.html";
-        }
-    } else {
+    if (!emailInput || !passInput) {
         alert("Please fill in all fields to enter.");
+        return;
     }
+
+    if (emailInput === ADMIN_EMAIL && passInput === ADMIN_PASS) {
+        localStorage.setItem("currentUserEmail", "admin");
+        alert("Login Successful! Welcome, Admin."); 
+        window.location.href = "Admin_Interface.html";
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("allUsers")) || [];
+    const user = users.find(u => u.email === emailInput && u.pass === passInput);
+
+    if (user) {
+        localStorage.setItem("currentUserEmail", user.email);
+        alert(`Login Successful! Welcome back, ${user.name}.`); 
+        window.location.href = "Main_Menu.html";
+    } else {
+        alert("Invalid email or password. Please try again.");
+    }
+}
+
+function registerAccount() {
+    const name = document.getElementById('regName').value;
+    const email = document.getElementById('regEmail').value;
+    const pass = document.getElementById('regPass').value;
+    const age = document.getElementById('regAge').value;
+    const birth = document.getElementById('regBirth').value;
+    const gender = document.getElementById('regGender').value;
+
+    if (!name || !email || !pass) {
+        alert("Please fill in all basic fields!");
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("allUsers")) || [];
+
+    if (users.some(u => u.email === email)) {
+        alert("This email is already registered.");
+        return;
+    }
+
+    const randomID = Math.floor(1000 + Math.random() * 9000);
+    const userTag = `${name.replace(/\s+/g, '')}#${randomID}`;
+
+    const newUser = {
+        name: name,
+        email: email,
+        pass: pass,
+        age: age,
+        birth: birth,
+        gender: gender,
+        id: randomID,
+        userTag: userTag
+    };
+
+    users.push(newUser);
+    localStorage.setItem("allUsers", JSON.stringify(users));
+    
+    alert(`Account Created! Welcome ${name}. Your unique tag is: ${userTag}`);
+    window.location.reload();
 }
 
 function showRegStep(step) {
@@ -26,95 +80,13 @@ function showRegStep(step) {
     }
 }
 
-function registerAccount() {
-    const data = {
-        name: document.getElementById('regName').value,
-        age: document.getElementById('regAge').value,
-        birth: document.getElementById('regBirth').value,
-        gender: document.getElementById('regGender').value,
-        email: document.getElementById('regEmail').value,
-        pass: document.getElementById('regPass').value,
-        id: Math.floor(1000 + Math.random() * 9000) 
-    };
-
-    if (data.name && data.email && data.pass) {
-        localStorage.setItem("userProfile", JSON.stringify(data));
-        alert("Account Created Successfully!");
-        window.location.reload();
-    } else {
-        alert("Please fill in all fields!");
-    }
-}
-
-
-
-
-// --- 1. Registration: Store in an array of users ---
-function registerAccount() {
-    const newUser = {
-        name: document.getElementById('regName').value,
-        age: document.getElementById('regAge').value,
-        birth: document.getElementById('regBirth').value,
-        gender: document.getElementById('regGender').value,
-        email: document.getElementById('regEmail').value,
-        pass: document.getElementById('regPass').value,
-        id: Math.floor(1000 + Math.random() * 9000) 
-    };
-
-    if (newUser.name && newUser.email && newUser.pass) {
-        // Get existing users or start new array
-        let users = JSON.parse(localStorage.getItem("allUsers")) || [];
-        
-        // Check if email already exists
-        if (users.some(u => u.email === newUser.email)) {
-            alert("This email is already registered.");
-            return;
-        }
-
-        users.push(newUser);
-        localStorage.setItem("allUsers", JSON.stringify(users));
-        alert("Account Created Successfully! Please Log In.");
-        window.location.reload();
-    } else {
-        alert("Please fill in all fields!");
-    }
-}
-
-// --- 2. Login: Track who is currently active ---
-function login() {
-    const emailInput = document.getElementById('email').value;
-    const passInput = document.getElementById('password').value;
-    const ADMIN_EMAIL = "admin@celeb.com";
-    const ADMIN_PASS = "admin123";
-
-    if (emailInput === ADMIN_EMAIL && passInput === ADMIN_PASS) {
-        localStorage.setItem("currentUserEmail", "admin");
-        window.location.href = "Admin_Interface.html";
-        return;
-    }
-
-    let users = JSON.parse(localStorage.getItem("allUsers")) || [];
-    const user = users.find(u => u.email === emailInput && u.pass === passInput);
-
-    if (user) {
-        // Store only the identifier for the session
-        localStorage.setItem("currentUserEmail", user.email);
-        window.location.href = "Main_Menu.html";
-    } else {
-        alert("Invalid email or password.");
-    }
-}
-
-// --- 3. Page Load: Fetch data for the active user ---
 window.onload = function() {
     const currentEmail = localStorage.getItem("currentUserEmail");
     let users = JSON.parse(localStorage.getItem("allUsers")) || [];
     
-    // Find the profile of the person logged in
     const profile = users.find(u => u.email === currentEmail);
     
     if (profile) {
-        // Map data to UI
         const fields = {
             'sidePanelName': profile.name,
             'sidePanelID': "#ID-" + profile.id,
@@ -132,20 +104,23 @@ window.onload = function() {
             }
         }
     } else if (window.location.pathname.includes("Main_Menu.html")) {
-        // Security: Redirect to login if no profile found and on a protected page
         window.location.href = "Log_In.html";
     }
 
-    // Initialize other features
-    loadFeed();              
+    loadFeed();               
     renderNotifications();  
-    initCalendar();         
+    initCalendar(); 
+    if (window.location.pathname.includes("view_event.html")) {
+        initViewEvent();
+    }
+    if (window.location.pathname.includes("View_Event_Details.html")) {
+        loadAdminSidebar();
+        refreshParticipantView();
+    }
 };
 
-// --- 4. Logout: Clear the session ---
 function executeLogout() {
-    localStorage.removeItem("currentUserEmail"); // Remove specific session
-    // Optional: localStorage.clear(); // Only use if you want to wipe EVERYTHING
+    localStorage.removeItem("currentUserEmail"); 
     window.location.href = "Log_In.html";
 }
 
@@ -164,7 +139,6 @@ function checkInitialInvites() {
         localStorage.setItem("userNotifications", JSON.stringify(notifications));
     }
 }
-
 
 function renderNotifications() {
     const list = document.getElementById('notificationList');
@@ -232,16 +206,26 @@ function openArchive() {
     alert("Viewing " + archived.length + " archived items in console (Stage 1 of Archive Setup).");
 }
 
-function addNotification(type, title, message) {
+function addNotification(type, eventHostName, eventTitle) {
     let notifications = JSON.parse(localStorage.getItem("userNotifications")) || [];
     const now = new Date();
+    
+    const currentEmail = localStorage.getItem("currentUserEmail");
+    const users = JSON.parse(localStorage.getItem("allUsers")) || [];
+    const currentUser = users.find(u => u.email === currentEmail);
+    const currentUserName = currentUser ? currentUser.name : "";
+
+    const isOwner = eventHostName.toLowerCase().trim() === currentUserName.toLowerCase().trim();
+    const dynamicTitle = isOwner ? "New Event Created" : "You're Invited!";
+
     notifications.unshift({
         type: type,
-        title: title,
+        title: dynamicTitle,
         time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        message: message,
+        message: `Event: ${eventTitle} created by ${eventHostName}.`,
         status: 'unread'
     });
+
     localStorage.setItem("userNotifications", JSON.stringify(notifications));
     renderNotifications();
 }
@@ -308,8 +292,19 @@ const postForm = document.getElementById('createPostForm');
 if(postForm) {
     postForm.onsubmit = function(e) {
         e.preventDefault();
-        const now = new Date();
-        const createdTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        const currentEmail = localStorage.getItem("currentUserEmail");
+        const users = JSON.parse(localStorage.getItem("allUsers")) || [];
+        const currentUser = users.find(u => u.email === currentEmail);
+        
+        if (!currentUser) {
+            alert("Session expired. Please log in again.");
+            window.location.href = "Log_In.html";
+            return;
+        }
+
+        // Integrated Max Plus-Ones retrieval
+        let plusOnesVal = parseInt(document.getElementById('maxPlusOnes')?.value || 0);
 
         const newEvent = {
             id: 'POST-' + Date.now(),
@@ -317,21 +312,24 @@ if(postForm) {
             date: document.getElementById('eventDate').value,
             time: document.getElementById('eventTime').value,
             venue: document.getElementById('eventVenue').value,
+            address: document.getElementById('eventAddress')?.value || "---", 
             gender: document.getElementById('eventGender').value,
             guestLimit: document.getElementById('guestLimit').value || "No Limit",
+            maxPlusOnes: plusOnesVal,
             theme: document.getElementById('eventTheme').value || "None",
             description: document.getElementById('eventDesc').value || "No description provided.",
             type: document.getElementById('eventPrivacy')?.value || 'Public',
-            hostName: "Me", 
-            img: "https://images.stockcake.com/public/2/4/1/241780b9-650a-442c-8723-d9f425efd5a2_large/joyful-birthday-party-stockcake.jpg" 
+            hostName: currentUser.name,    
+            hostEmail: currentUser.email,  
+            img: document.getElementById('postPreviewImg').src 
         };
 
         let savedPosts = JSON.parse(localStorage.getItem("userPosts")) || [];
         savedPosts.unshift(newEvent);
         localStorage.setItem("userPosts", JSON.stringify(savedPosts));
 
-        addNotification(newEvent.type, "New Event Created", `Event: ${newEvent.title} at ${newEvent.venue}.`);
-
+        addNotification(newEvent.type, newEvent.hostName, newEvent.title);
+        
         alert("Success! Your event has been created.");
         window.location.href = "Main_Menu.html";
     };
@@ -361,28 +359,23 @@ function initCalendar() {
 
     let html = '';
 
-    // 1. Fill empty slots for the previous month
     for (let x = 0; x < firstDayIndex; x++) {
-        html += `<div></div>`; // Empty div, no 'col' class needed
+        html += `<div></div>`; 
     }
 
-    // 2. Fill the actual days
     for (let i = 1; i <= daysInMonth; i++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
         const hasEvent = allEvents.some(e => e.date === dateStr);
         
-        // Use your existing 'event-dot' class from CSS or dot logic
         const dotClass = hasEvent ? 'event-dot border-pink border' : '';
 
         html += `
             <div class="calendar-day ${dotClass}" 
-                 onclick="viewDate('${dateStr}')">
-                 ${i}
-                 ${hasEvent ? '<span class="position-absolute bottom-0 start-50 translate-middle-x bg-pink rounded-circle" style="width:4px; height:4px; margin-bottom: 5px;"></span>' : ''}
+                  onclick="viewDate('${dateStr}')">
+                  ${i}
+                  ${hasEvent ? '<span class="position-absolute bottom-0 start-50 translate-middle-x bg-pink rounded-circle" style="width:4px; height:4px; margin-bottom: 5px;"></span>' : ''}
             </div>`;
         
-        // REMOVED: The (i + firstDayIndex) % 7 logic. 
-        // CSS Grid handles the wrapping automatically!
     }
     grid.innerHTML = html;
 }
@@ -474,9 +467,15 @@ function initViewEvent() {
         document.getElementById('displayImg').src = event.img || 'https://via.placeholder.com/600x300';
         document.getElementById('displayDate').innerText = event.date;
         document.getElementById('displayTime').innerText = event.time || 'TBD';
-        document.getElementById('displayHost').innerText = event.hostName || "Me";
+        document.getElementById('displayHost').innerText = event.hostName || "allea";
         document.getElementById('displayVenue').innerText = event.venue;
         document.getElementById('displayType').innerText = (event.type || 'Public') + " Event";
+        
+        const addressEl = document.getElementById('displayAddress');
+        if (addressEl) {
+            addressEl.innerText = event.address || "---";
+        }
+
         if(document.getElementById('displayGender')) document.getElementById('displayGender').innerText = event.gender || "All";
         if(document.getElementById('displayLimit')) document.getElementById('displayLimit').innerText = event.guestLimit || "No Limit";
         if(document.getElementById('displayTheme')) document.getElementById('displayTheme').innerText = event.theme || "None";
@@ -596,18 +595,17 @@ function loadParticipantData() {
     }).join('');
 }
 
-/* ==========================================
- * FILTERED HOSTED EVENTS
- * ========================================== */
 function loadMyHostedEvents() {
     const container = document.getElementById('myHostedEventsContainer');
     if (!container) return;
 
+    const currentEmail = localStorage.getItem("currentUserEmail");
     const myPosts = JSON.parse(localStorage.getItem("userPosts")) || [];
-    const personalPosts = myPosts.filter(p => p.hostName === "Me");
+    
+    const personalPosts = myPosts.filter(p => p.hostEmail === currentEmail);
 
     if (personalPosts.length === 0) {
-        container.innerHTML = '<p class="text-muted small">You haven\'t created any events yet.</p>';
+        container.innerHTML = '<div class="text-center p-4 text-muted small">You haven\'t created any events yet.</div>';
         return;
     }
 
@@ -624,4 +622,155 @@ function loadMyHostedEvents() {
             </div>
         </div>
     `).join('');
+}
+
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function() {
+        const output = document.getElementById('postPreviewImg');
+        output.src = reader.result;
+    };
+    if(event.target.files[0]) {
+        reader.readAsDataURL(event.target.files[0]);
+    }
+} 
+
+if (document.getElementById('eventPrivacy')) {
+    document.getElementById('eventPrivacy').addEventListener('change', function() {
+        const inviteSection = document.getElementById('privateInviteSection');
+        if (this.value === 'Private') {
+            inviteSection.style.display = 'block';
+        } else {
+            inviteSection.style.display = 'none';
+        }
+    });
+}
+
+function shareEvent() {
+    const eventTitle = document.getElementById('displayTitle').innerText;
+    const shareData = {
+        title: eventTitle,
+        text: `Check out this event: ${eventTitle} on Celeb Search!`,
+        url: window.location.href 
+    };
+
+    if (navigator.share) {
+        navigator.share(shareData)
+            .then(() => console.log('Successful share'))
+            .catch((error) => console.log('Error sharing', error));
+    } else {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert("Invite link copied to clipboard!");
+        }).catch(err => {
+            console.error('Could not copy text: ', err);
+        });
+    }
+}
+
+
+function loadAdminSidebar() {
+    const list = document.getElementById('sidebarEventList');
+    if (!list) return;
+
+    const currentEmail = localStorage.getItem("currentUserEmail");
+    const myPosts = JSON.parse(localStorage.getItem("userPosts")) || [];
+    const personalEvents = myPosts.filter(p => p.hostEmail === currentEmail);
+
+    if (personalEvents.length === 0) {
+        list.innerHTML = `<div class="p-4 text-center text-muted small">You haven't created any events.</div>`;
+        return;
+    }
+
+    const activeId = localStorage.getItem("viewingDetailsId");
+
+    list.innerHTML = personalEvents.map(p => `
+        <div class="event-nav-item d-flex align-items-center ${p.id === activeId ? 'active shadow-sm' : ''}" onclick="switchToEvent('${p.id}')">
+            <div class="event-icon me-3" style="width: 40px; height: 40px; background: #fff0f2; color: #ff6b81; display: flex; align-items: center; justify-content: center; border-radius: 10px;"><i class="fas fa-star"></i></div>
+            <div class="overflow-hidden">
+                <h6 class="fw-bold mb-0 text-truncate" style="color: ${p.id === activeId ? '#ff6b81' : '#333'}">${p.title}</h6>
+                <small class="text-muted"><i class="fas fa-map-pin me-1"></i> ${p.venue}</small>
+            </div>
+        </div>
+    `).join('');
+}
+
+function switchToEvent(id) {
+    localStorage.setItem("viewingDetailsId", id);
+    loadAdminSidebar(); 
+    refreshParticipantView(); 
+}
+
+function refreshParticipantView() {
+    const eventId = localStorage.getItem("viewingDetailsId");
+    const detailView = document.getElementById('detailView');
+    const noSelection = document.getElementById('noSelectionMsg');
+
+    if (!eventId) return;
+
+    detailView.style.display = 'block';
+    noSelection.style.display = 'none';
+
+    const allPosts = JSON.parse(localStorage.getItem("userPosts")) || [];
+    const event = allPosts.find(p => p.id === eventId);
+    
+    if(event) {
+        if(document.getElementById('displayTitle')) document.getElementById('displayTitle').innerText = event.title;
+        if(document.getElementById('displayVenue')) document.getElementById('displayVenue').innerText = event.venue;
+        if(document.getElementById('displayTime')) document.getElementById('displayTime').innerText = `${event.date} @ ${event.time}`;
+        if(document.getElementById('displayAddress')) document.getElementById('displayAddress').innerText = event.address || "No specific address provided";
+        
+        if(document.getElementById('headerTitle')) document.getElementById('headerTitle').innerText = event.title;
+        if(document.getElementById('headerMeta')) document.getElementById('headerMeta').innerText = `${event.date} @ ${event.time} | ${event.venue}`;
+    }
+
+    const allRSVPs = JSON.parse(localStorage.getItem("eventRSVPs")) || [];
+    const filteredRSVPs = allRSVPs.filter(r => r.eventId === eventId);
+    
+    const tableBody = document.getElementById('participantTableBody');
+    let headcount = 0;
+
+    if (filteredRSVPs.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted">No one has RSVP'd yet.</td></tr>`;
+        if(document.getElementById('headerTotalHeadcount')) document.getElementById('headerTotalHeadcount').innerText = 0;
+        return;
+    }
+
+    tableBody.innerHTML = filteredRSVPs.map((p, index) => {
+        const extra = parseInt(p.extraGuests || 0);
+        headcount += (1 + extra);
+        
+        const guestNamesHtml = (p.guestNames && p.guestNames.length > 0)
+            ? `<div class="guest-folder" id="folder-${index}" style="display:none; background:#fafafa; border:1px dashed #ff6b81; border-radius:12px; padding:10px; margin-top:5px;">
+                 <div class="small fw-bold text-pink mb-1"><i class="fas fa-users me-1"></i> Guest List:</div>
+                 <div class="small text-muted">${p.guestNames.join(", ")}</div>
+               </div>`
+            : '';
+
+        return `
+            <tr>
+                <td class="ps-4">
+                    <div class="fw-bold">${p.participantName}</div>
+                    <div class="text-muted small">Submitted: ${p.timestamp.split(',')[1]}</div>
+                    ${guestNamesHtml}
+                </td>
+                <td>
+                    <span class="badge bg-light text-dark border-0">${p.gender}</span>
+                    <span class="ms-1 small text-muted">${p.age} yrs</span>
+                </td>
+                <td><i class="far fa-clock text-pink me-1"></i> ${p.timestamp.split(',')[1]}</td>
+                <td class="fw-bold text-pink">+ ${extra}</td>
+                <td class="pe-4 text-end">
+                    ${extra > 0 ? `<button class="btn btn-sm btn-outline-pink rounded-pill py-0" onclick="toggleFolder(${index})">View Guests</button>` : ''}
+                </td>
+            </tr>`;
+    }).join('');
+
+    if(document.getElementById('headerTotalHeadcount')) document.getElementById('headerTotalHeadcount').innerText = headcount;
+}
+
+function toggleFolder(index) {
+    const folder = document.getElementById(`folder-${index}`);
+    if (folder) {
+        folder.style.display = (folder.style.display === 'block') ? 'none' : 'block';
+    }
 }
